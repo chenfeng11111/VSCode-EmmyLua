@@ -238,8 +238,8 @@
                         "type": "emmylua_launch",
                         "request": "launch",
                         "name": "%debug.launch.name%",
-                        "program": "",
-                        "workingDir": "",
+                        "program": "${file}",
+                        "workingDir": "${workspaceFolder}",
                         "arguments": [],
                         "newWindow": false
                     }
@@ -252,8 +252,8 @@
                             "type": "emmylua_launch",
                             "request": "launch",
                             "name": "%debug.launch.name%",
-                            "program": "",
-                            "workingDir": "",
+                            "program": "${file}",
+                            "workingDir": "${workspaceFolder}",
                             "arguments": [],
                             "newWindow": false
                         }

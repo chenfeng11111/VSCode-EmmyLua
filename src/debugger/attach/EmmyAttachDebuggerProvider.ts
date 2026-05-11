@@ -16,7 +16,12 @@ export interface EmmyAttachDebugConfiguration extends DebugConfigurationBase {
 
 
 export class EmmyAttachDebuggerProvider extends DebuggerProvider {
-    async resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, configuration: EmmyAttachDebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration> {
+    async resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, configuration: EmmyAttachDebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration | undefined> {
+        if (process.platform !== 'win32') {
+            vscode.window.showErrorMessage('EmmyLua attach debug currently supports Windows only.');
+            return undefined;
+        }
+
         configuration.extensionPath = this.context.extensionPath;
         configuration.sourcePaths = this.getSourceRoots();
         configuration.request = "attach";
@@ -76,7 +81,7 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                     reject();
                 }
 
-            }).on("error", error => reject);
+            }).on("error", error => reject(error));
         });
     }
 }
