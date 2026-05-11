@@ -1,5 +1,23 @@
 # 🚀 Change Log
 
+## [0.9.36] - 2026-5-11
+
+### 🔧 更改
+
+- **新的格式化器**：新的格式化器（emmylua_formatter）现在为语言服务器的默认格式化器。更多信息请参阅 [EmmyLua 格式化器文档索引](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/emmylua_formatter/README_EN.md)。
+
+- **增强泛型类型推断**：改进了泛型类型推断算法，以更好地处理复杂场景，例如嵌套泛型和递归类型。
+
+- **更新依赖**：将多个依赖更新到最新版本，并将 luars 更新至 0.19.0。
+
+- **性能优化**：进行多项优化以提升语言服务器的整体性能，包括流分析（flow analysis）。
+
+### 🐛 修复
+
+- 修复 luajit 复数解析问题
+- 修复局部函数语义标记问题
+- 修复对 luals 语法的兼容 fun(...):...
+
 ## [0.9.36] - 2026-4-1
 
 ### ✨ 新增

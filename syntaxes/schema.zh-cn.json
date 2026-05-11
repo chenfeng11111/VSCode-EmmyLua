@@ -151,6 +151,7 @@
                 "ignoreGlobs": [],
                 "library": [],
                 "moduleMap": [],
+                "packages": [],
                 "preloadFileSize": 0,
                 "reindexDuration": 5000,
                 "workspaceRoots": []
@@ -387,6 +388,11 @@
                     "const": "cast-type-mismatch"
                 },
                 {
+                    "description": "unresolved-require",
+                    "type": "string",
+                    "const": "unresolved-require"
+                },
+                {
                     "description": "require 模块不可见。",
                     "type": "string",
                     "const": "require-module-not-visible"
@@ -425,6 +431,26 @@
                     "description": "attribute-redundant-parameter",
                     "type": "string",
                     "const": "attribute-redundant-parameter"
+                },
+                {
+                    "description": "invert-if",
+                    "type": "string",
+                    "const": "invert-if"
+                },
+                {
+                    "description": "Call to a non-callable value",
+                    "type": "string",
+                    "const": "call-non-callable"
+                },
+                {
+                    "description": "inconsistent-type-access-modifier",
+                    "type": "string",
+                    "const": "inconsistent-type-access-modifier"
+                },
+                {
+                    "description": "missing-type-argument",
+                    "type": "string",
+                    "const": "missing-type-argument"
                 }
             ]
         },
@@ -1089,7 +1115,7 @@
                     "type": "array",
                     "default": [],
                     "items": {
-                        "type": "string"
+                        "$ref": "#/$defs/EmmyrcWorkspacePathItem"
                     }
                 },
                 "moduleMap": {
@@ -1098,6 +1124,14 @@
                     "default": [],
                     "items": {
                         "$ref": "#/$defs/EmmyrcWorkspaceModuleMap"
+                    }
+                },
+                "packages": {
+                    "description": "Package directories. Can be a string path or an object with path and ignore rules.\nTreat the parent directory as a `library`, but only add files from the specified directory.\neg: [\"/usr/local/share/lua/5.1/module\"] or [{\"path\": \"/usr/local/share/lua/5.1/module\", \"ignoreDir\": [\"test\"], \"ignoreGlobs\": [\"**/*.spec.lua\"]}]",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "$ref": "#/$defs/EmmyrcWorkspacePathItem"
                     }
                 },
                 "preloadFileSize": {
@@ -1136,6 +1170,46 @@
             "required": [
                 "pattern",
                 "replace"
+            ]
+        },
+        "EmmyrcWorkspacePathConfig": {
+            "type": "object",
+            "properties": {
+                "ignoreDir": {
+                    "description": "Ignore directories within this entry",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "ignoreGlobs": {
+                    "description": "Ignore globs within this entry. eg: [\"**/*.lua\"]",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "path": {
+                    "description": "Workspace entry path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "path"
+            ]
+        },
+        "EmmyrcWorkspacePathItem": {
+            "anyOf": [
+                {
+                    "description": "Simple workspace entry path string",
+                    "type": "string"
+                },
+                {
+                    "description": "Workspace entry configuration with path and ignore rules",
+                    "$ref": "#/$defs/EmmyrcWorkspacePathConfig"
+                }
             ]
         }
     }

@@ -78,6 +78,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         // Server commands
         { id: 'emmy.stopServer', handler: stopServer },
         { id: 'emmy.restartServer', handler: restartServer },
+        { id: 'emmy.startServer', handler: restartServer },
         { id: 'emmy.showServerMenu', handler: showServerMenu },
         { id: 'emmy.showReferences', handler: showReferences },
         { id: 'emmy.showSyntaxTree', handler: showSyntaxTree },
