@@ -2,6 +2,14 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+
+## [0.9.38] - 2026-5-14
+
+- **Fix range format issue**: Built-in formatter now supports range format
+- **Fix some formatting edge cases**: Fixed some formatting edge cases, which are still being continuously improved
+- **Fix some stuck loading issue** Fixed some issue that cause the language server stuck at loading workspace, and improve the loading performance of large workspace
+
+
 ## [0.9.37] - 2026-5-11
 
 ### 🔧 Changed
