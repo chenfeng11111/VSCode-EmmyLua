@@ -57,17 +57,27 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
     private async detectArch(): Promise<WinArch> {
         const cwd = `${this.extensionPath}/debugger/emmy/windows/x86`;
         const args = [
-            'emmy_tool.exe',
+            `${cwd}/emmy_tool.exe`,
             'arch_pid',
             `${this.pid}`
         ];
 
+        // 获取stdout输出
         return new Promise<WinArch>((r, c) => {
-            cp.exec(args.join(" "), { cwd: cwd })
-                .on('close', (code) => {
-                    r(code === 0 ? WinArch.X64 : WinArch.X86);
-                })
-                .on('error', c);
+            cp.exec(args.join(" "), (err, stdout, stderr) => {
+                if (err) {
+                    c(err);
+                }
+                else {
+                    const arch = Number(stdout.trim());
+                    if (arch === 0) {
+                        r(WinArch.X64);
+                    }
+                    else {
+                        r(WinArch.X86);
+                    }
+                }
+            });
         });
     }
 
@@ -76,7 +86,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
         const archName = arch === WinArch.X64 ? 'x64' : 'x86';
         const cwd = `${this.extensionPath}/debugger/emmy/windows/${archName}`;
         const args = [
-            'emmy_tool.exe',
+            `${cwd}/emmy_tool.exe`,
             'attach',
             '-p',
             `${this.pid}`,
@@ -93,6 +103,9 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
             cp.exec(args.join(" "), { cwd: cwd }, (err, stdout, stderr) => {
                 this.sendEvent(new OutputEvent(stdout));
             })
+                .on('error', (err) => {
+                    console.error(`detectArch error: ${err}`);
+                })
                 .on('close', (code) => {
                     if (code === 0) {
                         if (this.captureLog) {
