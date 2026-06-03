@@ -1,7 +1,7 @@
 {
-    "emmyDebuggerVersion": "1.9.1",
+    "emmyDebuggerVersion": "1.9.2",
     "emmyDebuggerUrl": "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download",
-    "newLanguageServerVersion": "0.23.1",
+    "newLanguageServerVersion": "0.23.2",
     "newLanguageServerUrl": "https://github.com/CppCXY/emmylua-analyzer-rust/releases/download",
     "newLanguageServerSchemaUrl": "https://raw.githubusercontent.com/EmmyLuaLs/emmylua-analyzer-rust/refs/tags/{{tag}}/crates/emmylua_code_analysis/resources/schema.json"
 }

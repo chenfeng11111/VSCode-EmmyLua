@@ -2,6 +2,12 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.39] - 2026-6-3
+
+- **Fixed formatting issues**: Fixed some issues that caused incorrect formatting results.
+- **Fixed attach debugging issues**: Fixed an issue where a VS Code update caused attach debugging to fail.
+- **Fixed some stuck loading issues**: Fixed some issues that caused the language server to get stuck while loading the workspace.
+
 
 ## [0.9.38] - 2026-5-14
 
