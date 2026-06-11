@@ -72,7 +72,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
     private async detectArch(): Promise<WinArch> {
         const cwd = `${this.extensionPath}/debugger/emmy/windows/x64`;
         const args = [
-            'emmy_tool.exe',
+            `${this.extensionPath}/debugger/emmy/windows/x86/emmy_tool.exe`,
             'arch_file',
             `\"${this.program}\"`
         ];
@@ -110,7 +110,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
 
         args.push(...(<string[]>this.arguments));
         return new Promise((r, c) => {
-            const childProcess = cp.spawn(`emmy_tool.exe`, args, {
+            const childProcess = cp.spawn(`${cwd}/emmy_tool.exe`, args, {
                 cwd: cwd,
                 windowsHide: false
             });
@@ -156,7 +156,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
 
         args.push(...(<string[]>this.arguments));
         return new Promise((r, c) => {
-            const childProcess = cp.spawn(`emmy_tool.exe`, args, {
+            const childProcess = cp.spawn(`${cwd}/emmy_tool.exe`, args, {
                 cwd: cwd,
                 windowsHide: false
             });
