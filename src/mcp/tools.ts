@@ -229,67 +229,52 @@ const tools: ToolDef[] = [
     },
     {
         name: 'continue',
-        description: 'Continue execution of a thread',
-        inputSchema: {
-            type: 'object',
-            properties: { threadId: { type: 'number', description: 'Thread ID' } },
-            required: ['threadId'],
-        },
-        handler: async (a) => {
-            const r = await requestWithTimeout(activeSession(), 'continue', a);
-            return { content: [{ type: 'text', text: JSON.stringify(r ?? {}) }] };
+        description: 'Continue execution',
+        inputSchema: { type: 'object', properties: {}, required: [] },
+        handler: async () => {
+            activeSession();
+            await vscode.commands.executeCommand('workbench.action.debug.continue');
+            return { content: [{ type: 'text', text: JSON.stringify({ success: true }) }] };
         },
     },
     {
         name: 'pause',
-        description: 'Pause a running thread',
-        inputSchema: {
-            type: 'object',
-            properties: { threadId: { type: 'number', description: 'Thread ID' } },
-            required: ['threadId'],
-        },
-        handler: async (a) => {
-            const r = await requestWithTimeout(activeSession(), 'pause', a);
-            return { content: [{ type: 'text', text: JSON.stringify(r ?? {}) }] };
+        description: 'Pause execution',
+        inputSchema: { type: 'object', properties: {}, required: [] },
+        handler: async () => {
+            activeSession();
+            await vscode.commands.executeCommand('workbench.action.debug.pause');
+            return { content: [{ type: 'text', text: JSON.stringify({ success: true }) }] };
         },
     },
     {
         name: 'step_over',
-        description: 'Step over (next line) in a thread',
-        inputSchema: {
-            type: 'object',
-            properties: { threadId: { type: 'number', description: 'Thread ID' } },
-            required: ['threadId'],
-        },
-        handler: async (a) => {
-            const r = await requestWithTimeout(activeSession(), 'next', a);
-            return { content: [{ type: 'text', text: JSON.stringify(r ?? {}) }] };
+        description: 'Step over (next line)',
+        inputSchema: { type: 'object', properties: {}, required: [] },
+        handler: async () => {
+            activeSession();
+            await vscode.commands.executeCommand('workbench.action.debug.stepOver');
+            return { content: [{ type: 'text', text: JSON.stringify({ success: true }) }] };
         },
     },
     {
         name: 'step_in',
         description: 'Step into a function call',
-        inputSchema: {
-            type: 'object',
-            properties: { threadId: { type: 'number', description: 'Thread ID' } },
-            required: ['threadId'],
-        },
-        handler: async (a) => {
-            const r = await requestWithTimeout(activeSession(), 'stepIn', a);
-            return { content: [{ type: 'text', text: JSON.stringify(r ?? {}) }] };
+        inputSchema: { type: 'object', properties: {}, required: [] },
+        handler: async () => {
+            activeSession();
+            await vscode.commands.executeCommand('workbench.action.debug.stepInto');
+            return { content: [{ type: 'text', text: JSON.stringify({ success: true }) }] };
         },
     },
     {
         name: 'step_out',
         description: 'Step out of the current function',
-        inputSchema: {
-            type: 'object',
-            properties: { threadId: { type: 'number', description: 'Thread ID' } },
-            required: ['threadId'],
-        },
-        handler: async (a) => {
-            const r = await requestWithTimeout(activeSession(), 'stepOut', a);
-            return { content: [{ type: 'text', text: JSON.stringify(r ?? {}) }] };
+        inputSchema: { type: 'object', properties: {}, required: [] },
+        handler: async () => {
+            activeSession();
+            await vscode.commands.executeCommand('workbench.action.debug.stepOut');
+            return { content: [{ type: 'text', text: JSON.stringify({ success: true }) }] };
         },
     },
     {
