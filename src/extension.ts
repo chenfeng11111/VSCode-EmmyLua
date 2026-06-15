@@ -16,6 +16,7 @@ import { EmmyrcSchemaContentProvider } from './emmyrcSchemaContentProvider';
 import { SyntaxTreeManager, setClientGetter } from './syntaxTreeProvider';
 import { insertEmmyDebugCode, registerDebuggers } from './debugger';
 import * as LuaRocks from './luarocks';
+import { startMcpServer, stopMcpServer } from './mcp/server';
 
 /**
  * Command registration entry
@@ -92,6 +93,9 @@ function registerCommands(context: vscode.ExtensionContext): void {
         { id: 'emmylua.luarocks.showPackages', handler: LuaRocks.showPackagesView },
         { id: 'emmylua.luarocks.clearSearch', handler: LuaRocks.clearSearch },
         { id: 'emmylua.luarocks.checkInstallation', handler: LuaRocks.checkLuaRocksInstallation },
+        // MCP commands
+        { id: 'emmy.startMcpServer', handler: startMcpServer },
+        { id: 'emmy.stopMcpServer', handler: stopMcpServer },
     ];
 
     // Register all commands

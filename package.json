@@ -110,6 +110,14 @@
                 "command": "emmylua.luarocks.checkInstallation",
                 "title": "Check LuaRocks Installation",
                 "category": "LuaRocks"
+            },
+            {
+                "command": "emmy.startMcpServer",
+                "title": "EmmyLua: Start MCP Server"
+            },
+            {
+                "command": "emmy.stopMcpServer",
+                "title": "EmmyLua: Stop MCP Server"
             }
         ],
         "languages": [
@@ -1227,8 +1235,9 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
+        "vscode:prepublish": "npm run compile && npm run build:mcp",
         "compile": "tsc -p ./",
+        "build:mcp": "node node_modules/esbuild/bin/esbuild src/mcp/server.ts --bundle --outfile=out/mcp/server.js --platform=node --external:vscode --external:http --external:crypto --external:path --format=cjs",
         "watch": "tsc -watch -p ./",
         "test": "npm run compile && node ./node_modules/vscode/bin/test",
         "release": "node --disable-warning=ExperimentalWarning ./build/release.js"
@@ -1238,18 +1247,21 @@
         "@types/node": "^17.0.21",
         "@types/vscode": "1.89.0",
         "@vscode/vsce": "2.26.1",
-        "download": "^7.1.0",
+        "decompress": "^4.2.1",
+        "decompress-targz": "4.1.1",
+        "esbuild": "^0.28.0",
         "eslint": "^8.11.0",
         "filecopy": "^4.0.2",
-        "typescript": "^4.0.2",
-        "decompress-targz": "4.1.1"
+        "typescript": "^5.0"
     },
     "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.29.0",
         "@vscode/debugadapter": "^1.61.0",
         "@vscode/debugprotocol": "^1.61.0",
+        "concat-map": "0.0.2",
         "iconv-lite": "^0.6.3",
         "smart-buffer": "^4.0.1",
         "vscode-languageclient": "9.0.1",
-        "concat-map": "0.0.2"
+        "zod": "^3.25"
     }
 }
