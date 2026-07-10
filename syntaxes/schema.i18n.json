@@ -231,7 +231,7 @@
         "zh-CN": "诊断严重性: 警告。"
     },
     "EmmyrcCodeAction.insertSpace": {
-        "en": "Add space after `---` comments when inserting `@diagnostic disable-next-line`.",
+        "en": "Add space after `---` comments when inserting `@diagnostic disable-next-line`.\n\nWhen omitted, this follows the formatter's resolved\n`emmy_doc.space_between_tag_columns` setting.",
         "zh-CN": "是否在 '---' 后插入空格。"
     },
     "EmmyrcCodeLens.enable": {

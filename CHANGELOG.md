@@ -2,6 +2,55 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.40] - 2026-7-10
+
+### ✨ Added
+
+- **Support LuaJIT-Ext**: Added support for LuaJIT‑Ext syntax, including compound assignment operators, null‑safe navigation, the null‑coalescing operator, constant variables statement, the continue statement, the underscore number, and the short function syntax.
+
+- **Support LuaJIT3**: Besides LuaJIT‑Ext syntax, named variadic arguments and integer division are also supported.
+
+- **Support const generic parameters**: Added the `const T` syntax for generics, for example `---@generic const T`.
+
+- **Emmylua_check severity filter**: Added the `--severity` option to filter diagnostic output by minimum severity.
+
+- **Support debug mcp**: Added support for the `emmy.startMcpServer` command, start debug mcp server, and support `emmy.stopMcpServer` command to stop debug mcp server.
+
+Usage: 
+
+Run `EmmyLua: Start MCP Server` in VSCode (via command palette)
+Configure OpenCode to connect:
+```json
+{
+  "mcp": {
+    "emmylua-mcp": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8827/sse"
+    }
+  }
+}
+```
+MCP tools that inspect debug state (stack_trace, evaluate, variables, etc.) require an active emmylua_new debug session — they will return an error if none is running. Idempotent tools (list_breakpoints, list_supported_languages) work without a debug session.
+
+
+### ⚠️ Deprecated
+
+- **std.ConstTpl**: Marked `std.ConstTpl` as deprecated. Use the new `const T` generic syntax instead.
+
+### 🔧 Changed
+
+- **Rename table field optimization**: `lsp_optimization("skip_table_fields_check")` is now the documented name for skipping table field diagnostics. The old `check_table_field` name remains supported as a compatibility alias.
+- **Refactor hover signature**: Refactored signature rendering in hover.
+
+### 🗑️ Removed
+
+- **`---@attribute` tag**: Removed the `---@attribute` tag. Attribute definitions now use C#-like class definitions:
+```lua
+---@class NewAttribute: Attribute
+---@overload fun(args)
+```
+
+
 ## [0.9.39] - 2026-6-3
 
 - **Fixed formatting issues**: Fixed some issues that caused incorrect formatting results.

@@ -12,7 +12,7 @@
         "codeAction": {
             "$ref": "#/$defs/EmmyrcCodeAction",
             "default": {
-                "insertSpace": false
+                "insertSpace": null
             }
         },
         "codeLens": {
@@ -492,8 +492,11 @@
             "properties": {
                 "insertSpace": {
                     "description": "是否在 '---' 后插入空格。",
-                    "type": "boolean",
-                    "default": false,
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "default": null,
                     "x-vscode-setting": true
                 }
             }
@@ -825,6 +828,13 @@
         },
         "EmmyrcLuaVersion": {
             "oneOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "LuaJIT-Ext",
+                        "LuaJIT3"
+                    ]
+                },
                 {
                     "description": "Lua 5.1",
                     "type": "string",

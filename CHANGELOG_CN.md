@@ -1,5 +1,53 @@
 # 🚀 Change Log
 
+## [0.9.40] - 2026-7-10
+
+### ✨ 新增
+
+- **支持 LuaJIT‑Ext**：增加了对 LuaJIT‑Ext 语法特性的支持，包括复合赋值运算符、空安全导航、空值合并运算符、常量变量声明、`continue` 语句、下划线数字分隔符以及短函数语法。
+
+- **支持 LuaJIT3**：除 LuaJIT‑Ext 语法外，还支持具名可变参数和整数除法。
+
+- **支持 const 泛型参数**：增加了 `const T` 泛型语法，例如 `---@generic const T`。
+
+- **Emmylua_check 严重性过滤器**：增加了 `--severity` 选项，可按最低严重性过滤诊断输出。
+
+- **支持调试 MCP**：增加了 `emmy.startMcpServer` 命令，用于启动调试 MCP 服务器；同时支持 `emmy.stopMcpServer` 命令停止调试 MCP 服务器。
+
+用法：
+
+在 VSCode 中（通过命令面板）运行 `EmmyLua: Start MCP Server`
+配置 OpenCode 进行连接：
+```json
+{
+  "mcp": {
+    "emmylua-mcp": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8827/sse"
+    }
+  }
+}
+```
+用于检查调试状态的 MCP 工具（如 `stack_trace`、`evaluate`、`variables` 等）需要有一个活跃的 `emmylua_new` 调试会话 —— 如果没有正在运行的会话，这些工具将返回错误。幂等工具（如 `list_breakpoints`、`list_supported_languages`）无需调试会话即可工作。
+
+### ⚠️ 弃用
+
+- **std.ConstTpl**：标记 `std.ConstTpl` 为已弃用。请改用新的 `const T` 泛型语法。
+
+### 🔧 变更
+
+- **重命名字段检查优化**：`lsp_optimization("skip_table_fields_check")` 现在是用于跳过表字段诊断的正式名称。旧名称 `check_table_field` 仍作为兼容别名保留。
+- **重构悬停签名**：重构了悬停提示中的签名渲染。
+
+### 🗑️ 移除
+
+- **`---@attribute` 标签**：移除了 `---@attribute` 标签。属性定义现在改用类似 C# 的类定义方式：
+```lua
+---@class NewAttribute: Attribute
+---@overload fun(args)
+```
+
+
 ## [0.9.39] - 2026-6-3
 
 - **修复格式化问题**：修复了一些导致格式化结果不正确的问题
