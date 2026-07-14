@@ -120,9 +120,9 @@ function tryListen(host: string, startPort: number, maxRetries: number): Promise
     });
 }
 
-export async function startMcpServer(): Promise<void> {
-    const host = process.env['EMMY_MCP_HOST'] || DEFAULT_HOST;
-    const port = parseInt(process.env['EMMY_MCP_PORT'] || String(DEFAULT_PORT), 10);
+export async function startMcpServer(host?: string, port?: number): Promise<void> {
+    const resolvedHost = host || process.env['EMMY_MCP_HOST'] || DEFAULT_HOST;
+    const resolvedPort = port || parseInt(process.env['EMMY_MCP_PORT'] || '', 10) || DEFAULT_PORT;
 
     sessionManager = new SessionManager();
     setStopMcpCallback(stopMcpServer);
@@ -135,7 +135,7 @@ export async function startMcpServer(): Promise<void> {
     mcpServer = mcpServerInstance;
 
     try {
-        const { server: httpSrv, port: actualPort } = await tryListen(host, port, 10);
+        const { server: httpSrv, port: actualPort } = await tryListen(resolvedHost, resolvedPort, 10);
         httpServer = httpSrv;
         log(`MCP server started at http://${host}:${actualPort}/mcp (Streamable HTTP) and /sse (SSE)`);
     } catch (e: any) {

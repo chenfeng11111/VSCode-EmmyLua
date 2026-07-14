@@ -30,6 +30,8 @@
     "config.emmylua.ls.executablePath.description": "Override path to the EmmyLua language server executable.\n\nUses bundled language server if not specified",
     "config.emmylua.ls.globalConfigPath.description": "Path to the global `.emmyrc.json`.\n\nSettings from this file will be used if they're not overridden by the project's `.emmyrc.json`",
     "config.emmylua.ls.startParameters.description": "Additional arguments to be passed to the EmmyLua language server",
+    "config.emmylua.mcp.host.description": "MCP server listen address (default: 127.0.0.1)",
+    "config.emmylua.mcp.port.description": "MCP server listen port (default: 8827)",
     "config.emmylua.references.enable.description": "Enable searching for symbol usages.",
     "config.emmylua.references.fuzzySearch.description": "Use fuzzy search when searching for symbol usages\nand normal search didn't find anything.",
     "config.emmylua.references.shortStringSearch.description": "Also search for usages in strings.",

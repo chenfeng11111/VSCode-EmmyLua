@@ -30,6 +30,8 @@
     "config.emmylua.ls.executablePath.description": "VSCode中指定可执行文件路径",
     "config.emmylua.ls.globalConfigPath.description": "指定全局配置文件的路径",
     "config.emmylua.ls.startParameters.description": "传递给EmmyLua语言服务器的附加参数",
+    "config.emmylua.mcp.host.description": "MCP 服务器监听地址（默认: 127.0.0.1）",
+    "config.emmylua.mcp.port.description": "MCP 服务器监听端口（默认: 8827）",
     "config.emmylua.references.enable.description": "启用符号用法搜索。",
     "config.emmylua.references.fuzzySearch.description": "当普通搜索未找到任何内容时，使用模糊搜索查找符号用法。",
     "config.emmylua.references.shortStringSearch.description": "也在字符串中搜索用法。",

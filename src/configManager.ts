@@ -78,6 +78,20 @@ export class ConfigurationManager {
     }
 
     /**
+     * Get MCP server host
+     */
+    getMcpHost(): string {
+        return this.get<string>('mcp.host', '127.0.0.1') || '127.0.0.1';
+    }
+
+    /**
+     * Get MCP server port
+     */
+    getMcpPort(): number {
+        return this.get<number>('mcp.port', 8827) || 8827;
+    }
+
+    /**
      * Get color configuration
      */
     getColor(colorType: string): string | undefined {

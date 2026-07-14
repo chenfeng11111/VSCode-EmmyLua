@@ -278,6 +278,56 @@ const tools: ToolDef[] = [
         },
     },
     {
+        name: 'get_diagnostics',
+        description: 'Get diagnostic information (errors, warnings, hints) for a specified file',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                filePath: { type: 'string', description: 'Absolute or relative path to the file' },
+            },
+            required: ['filePath'],
+        },
+        handler: async (a) => {
+            const filePath: string = a.filePath || '';
+            const uri = vscode.Uri.file(filePath);
+            const diagnostics = vscode.languages.getDiagnostics(uri);
+
+            const result = diagnostics.map(d => ({
+                message: d.message,
+                severity: d.severity === vscode.DiagnosticSeverity.Error ? 'error'
+                    : d.severity === vscode.DiagnosticSeverity.Warning ? 'warning'
+                    : d.severity === vscode.DiagnosticSeverity.Information ? 'information'
+                    : 'hint',
+                range: {
+                    start: { line: d.range.start.line + 1, character: d.range.start.character + 1 },
+                    end: { line: d.range.end.line + 1, character: d.range.end.character + 1 },
+                },
+                source: d.source,
+                code: d.code,
+                relatedInformation: d.relatedInformation?.map(ri => ({
+                    message: ri.message,
+                    location: ri.location.uri.toString(),
+                    range: {
+                        start: { line: ri.location.range.start.line + 1, character: ri.location.range.start.character + 1 },
+                        end: { line: ri.location.range.end.line + 1, character: ri.location.range.end.character + 1 },
+                    },
+                })),
+                tags: d.tags,
+            }));
+
+            return {
+                content: [{
+                    type: 'text',
+                    text: JSON.stringify({
+                        filePath,
+                        totalCount: result.length,
+                        diagnostics: result,
+                    }),
+                }],
+            };
+        },
+    },
+    {
         name: 'source',
         description: 'Get source code by sourceReference',
         inputSchema: {

@@ -94,7 +94,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         { id: 'emmylua.luarocks.clearSearch', handler: LuaRocks.clearSearch },
         { id: 'emmylua.luarocks.checkInstallation', handler: LuaRocks.checkLuaRocksInstallation },
         // MCP commands
-        { id: 'emmy.startMcpServer', handler: startMcpServer },
+        { id: 'emmy.startMcpServer', handler: handleStartMcpServer },
         { id: 'emmy.stopMcpServer', handler: stopMcpServer },
     ];
 
@@ -436,6 +436,13 @@ function showReferences(uri: string, pos: IServerPosition, locations: IServerLoc
                 new vscode.Position(loc.range.end.line, loc.range.end.character)
             )));
     vscode.commands.executeCommand("editor.action.showReferences", u, p, vscodeLocations);
+}
+
+async function handleStartMcpServer(): Promise<void> {
+    const configManager = new ConfigurationManager(getPreferredConfigurationScope());
+    const host = configManager.getMcpHost();
+    const port = configManager.getMcpPort();
+    await startMcpServer(host, port);
 }
 
 async function stopServer(): Promise<void> {
