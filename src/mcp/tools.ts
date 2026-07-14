@@ -28,6 +28,60 @@ function requestWithTimeout(session: vscode.DebugSession, command: string, args?
     ]);
 }
 
+const DIAGNOSTICS_TIMEOUT_MS = 3000;
+
+/** Wait for diagnostics to arrive for the given URI via onDidChangeDiagnostics. */
+function waitForDiagnostics(uri: vscode.Uri): Promise<void> {
+    return new Promise((resolve) => {
+        const sub = vscode.languages.onDidChangeDiagnostics((e) => {
+            for (const u of e.uris) {
+                if (u.toString() === uri.toString()) {
+                    sub.dispose();
+                    resolve();
+                    return;
+                }
+            }
+        });
+        setTimeout(() => { sub.dispose(); resolve(); }, DIAGNOSTICS_TIMEOUT_MS);
+    });
+}
+
+/** Format diagnostic data into the MCP response structure. */
+function formatDiagnosticsResult(filePath: string, diagnostics: readonly vscode.Diagnostic[], error?: string) {
+    return {
+        content: [{
+            type: 'text',
+            text: JSON.stringify({
+                filePath,
+                totalCount: diagnostics.length,
+                diagnostics: diagnostics.map(d => ({
+                    message: d.message,
+                    severity: d.severity === vscode.DiagnosticSeverity.Error ? 'error'
+                        : d.severity === vscode.DiagnosticSeverity.Warning ? 'warning'
+                        : d.severity === vscode.DiagnosticSeverity.Information ? 'information'
+                        : 'hint',
+                    range: {
+                        start: { line: d.range.start.line + 1, character: d.range.start.character + 1 },
+                        end: { line: d.range.end.line + 1, character: d.range.end.character + 1 },
+                    },
+                    source: d.source,
+                    code: d.code,
+                    relatedInformation: d.relatedInformation?.map(ri => ({
+                        message: ri.message,
+                        location: ri.location.uri.toString(),
+                        range: {
+                            start: { line: ri.location.range.start.line + 1, character: ri.location.range.start.character + 1 },
+                            end: { line: ri.location.range.end.line + 1, character: ri.location.range.end.character + 1 },
+                        },
+                    })),
+                    tags: d.tags,
+                })),
+                ...(error ? { error } : {}),
+            }),
+        }],
+    };
+}
+
 const tools: ToolDef[] = [
     {
         name: 'list_supported_languages',
@@ -279,7 +333,8 @@ const tools: ToolDef[] = [
     },
     {
         name: 'get_diagnostics',
-        description: 'Get diagnostic information (errors, warnings, hints) for a specified file',
+        description: 'Get diagnostic information (errors, warnings, hints) for a specified file. '
+            + 'Always triggers a fresh analysis from the language server.',
         inputSchema: {
             type: 'object',
             properties: {
@@ -290,41 +345,41 @@ const tools: ToolDef[] = [
         handler: async (a) => {
             const filePath: string = a.filePath || '';
             const uri = vscode.Uri.file(filePath);
+
+            // Subscribe before triggering, so we don't miss the event.
+            const waitPromise = waitForDiagnostics(uri);
+
+            // Trigger pull diagnostics (LSP 3.17 textDocument/diagnostic).
+            // No need to open the file — works entirely through the language client.
+            try {
+                await vscode.commands.executeCommand('vscode.executeDocumentDiagnosticProvider', uri);
+            } catch {
+                // Command not available — fall back to opening the document
+                // so the language server receives didOpen and publishes diagnostics.
+                let doc: vscode.TextDocument;
+                try {
+                    doc = await vscode.workspace.openTextDocument(uri);
+                } catch {
+                    return formatDiagnosticsResult(filePath, [], `Failed to open file: ${filePath}`);
+                }
+                await vscode.window.showTextDocument(doc, { preview: true, preserveFocus: true });
+            }
+
+            await waitPromise;
             const diagnostics = vscode.languages.getDiagnostics(uri);
 
-            const result = diagnostics.map(d => ({
-                message: d.message,
-                severity: d.severity === vscode.DiagnosticSeverity.Error ? 'error'
-                    : d.severity === vscode.DiagnosticSeverity.Warning ? 'warning'
-                    : d.severity === vscode.DiagnosticSeverity.Information ? 'information'
-                    : 'hint',
-                range: {
-                    start: { line: d.range.start.line + 1, character: d.range.start.character + 1 },
-                    end: { line: d.range.end.line + 1, character: d.range.end.character + 1 },
-                },
-                source: d.source,
-                code: d.code,
-                relatedInformation: d.relatedInformation?.map(ri => ({
-                    message: ri.message,
-                    location: ri.location.uri.toString(),
-                    range: {
-                        start: { line: ri.location.range.start.line + 1, character: ri.location.range.start.character + 1 },
-                        end: { line: ri.location.range.end.line + 1, character: ri.location.range.end.character + 1 },
-                    },
-                })),
-                tags: d.tags,
-            }));
+            // If we fell back to opening the document, close the editor tab.
+            // (Pull diagnostics doesn't open any tab, so this is a no-op in that case.)
+            for (const tg of vscode.window.tabGroups.all) {
+                for (const tab of tg.tabs) {
+                    const input = tab.input;
+                    if (input instanceof vscode.TabInputText && input.uri.toString() === uri.toString()) {
+                        void vscode.window.tabGroups.close(tab);
+                    }
+                }
+            }
 
-            return {
-                content: [{
-                    type: 'text',
-                    text: JSON.stringify({
-                        filePath,
-                        totalCount: result.length,
-                        diagnostics: result,
-                    }),
-                }],
-            };
+            return formatDiagnosticsResult(filePath, diagnostics);
         },
     },
     {

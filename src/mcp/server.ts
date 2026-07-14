@@ -121,6 +121,11 @@ function tryListen(host: string, startPort: number, maxRetries: number): Promise
 }
 
 export async function startMcpServer(host?: string, port?: number): Promise<void> {
+    if (mcpServer || httpServer) {
+        log('MCP server is already running, skipping start');
+        return;
+    }
+
     const resolvedHost = host || process.env['EMMY_MCP_HOST'] || DEFAULT_HOST;
     const resolvedPort = port || parseInt(process.env['EMMY_MCP_PORT'] || '', 10) || DEFAULT_PORT;
 
