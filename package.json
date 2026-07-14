@@ -1,10 +1,10 @@
 {
-    "name": "emmylua",
-    "displayName": "EmmyLua",
-    "description": "EmmyLua for vscode",
+    "name": "emmylua-lc",
+    "displayName": "EmmyLua-LC",
+    "description": "EmmyLua for vscode - fork from EmmyLua",
     "version": "0.9.40",
     "icon": "res/icon.png",
-    "publisher": "tangzx",
+    "publisher": "zyw",
     "engines": {
         "vscode": "^1.89.0"
     },
@@ -1099,6 +1099,22 @@
                         "markdownDescription": "Look for language server on this port instead of starting it from an executable"
                     }
                 }
+            },
+            {
+                "title": "MCP Server",
+                "order": 14,
+                "properties": {
+                    "emmylua.mcp.host": {
+                        "type": "string",
+                        "default": "127.0.0.1",
+                        "markdownDescription": "%config.emmylua.mcp.host.description%"
+                    },
+                    "emmylua.mcp.port": {
+                        "type": "integer",
+                        "default": 8827,
+                        "markdownDescription": "%config.emmylua.mcp.port.description%"
+                    }
+                }
             }
         ],
         "configurationDefaults": {
@@ -1240,7 +1256,8 @@
         "build:mcp": "node node_modules/esbuild/bin/esbuild src/mcp/server.ts --bundle --outfile=out/mcp/server.js --platform=node --external:vscode --external:http --external:crypto --external:path --format=cjs",
         "watch": "tsc -watch -p ./",
         "test": "npm run compile && node ./node_modules/vscode/bin/test",
-        "release": "node --disable-warning=ExperimentalWarning ./build/release.js"
+        "release": "node --disable-warning=ExperimentalWarning ./build/release.js",
+        "package": "node ./build/package.js"
     },
     "devDependencies": {
         "@types/mocha": "^9.1.0",
