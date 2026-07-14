@@ -17,6 +17,7 @@ import { SyntaxTreeManager, setClientGetter } from './syntaxTreeProvider';
 import { insertEmmyDebugCode, registerDebuggers } from './debugger';
 import * as LuaRocks from './luarocks';
 import { startMcpServer, stopMcpServer } from './mcp/server';
+import { addOrUpdateEmmyluaMcpConfig, removeEmmyluaMcpConfig } from './mcp/projectConfig';
 
 /**
  * Command registration entry
@@ -96,6 +97,8 @@ function registerCommands(context: vscode.ExtensionContext): void {
         // MCP commands
         { id: 'emmy.startMcpServer', handler: handleStartMcpServer },
         { id: 'emmy.stopMcpServer', handler: stopMcpServer },
+        { id: 'emmy.updateMcpJson', handler: handleUpdateMcpJson },
+        { id: 'emmy.removeMcpJson', handler: handleRemoveMcpJson },
     ];
 
     // Register all commands
@@ -443,6 +446,42 @@ async function handleStartMcpServer(): Promise<void> {
     const host = configManager.getMcpHost();
     const port = configManager.getMcpPort();
     await startMcpServer(host, port);
+}
+
+async function handleUpdateMcpJson(): Promise<void> {
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    if (!workspaceFolder) {
+        vscode.window.showWarningMessage('No workspace folder open');
+        return;
+    }
+    const configManager = new ConfigurationManager(getPreferredConfigurationScope());
+    const host = configManager.getMcpHost();
+    const port = configManager.getMcpPort();
+    try {
+        const result = await addOrUpdateEmmyluaMcpConfig(workspaceFolder.uri.fsPath, host, port);
+        const action = result === 'added' ? 'Added' : 'Updated';
+        vscode.window.showInformationMessage(`${action} emmylua MCP config in .mcp.json (http://${host}:${port}/mcp)`);
+    } catch (e: any) {
+        vscode.window.showErrorMessage(`Failed to update .mcp.json: ${e.message}`);
+    }
+}
+
+async function handleRemoveMcpJson(): Promise<void> {
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    if (!workspaceFolder) {
+        vscode.window.showWarningMessage('No workspace folder open');
+        return;
+    }
+    try {
+        const removed = await removeEmmyluaMcpConfig(workspaceFolder.uri.fsPath);
+        if (removed) {
+            vscode.window.showInformationMessage('Removed emmylua MCP config from .mcp.json');
+        } else {
+            vscode.window.showInformationMessage('No emmylua MCP config found in .mcp.json');
+        }
+    } catch (e: any) {
+        vscode.window.showErrorMessage(`Failed to update .mcp.json: ${e.message}`);
+    }
 }
 
 async function stopServer(): Promise<void> {

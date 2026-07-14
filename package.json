@@ -118,6 +118,14 @@
             {
                 "command": "emmy.stopMcpServer",
                 "title": "EmmyLua: Stop MCP Server"
+            },
+            {
+                "command": "emmy.updateMcpJson",
+                "title": "EmmyLua: Add/Update MCP Config to .mcp.json"
+            },
+            {
+                "command": "emmy.removeMcpJson",
+                "title": "EmmyLua: Remove MCP Config from .mcp.json"
             }
         ],
         "languages": [
