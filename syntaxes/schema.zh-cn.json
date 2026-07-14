@@ -31,6 +31,7 @@
                 "baseFunctionIncludesName": true,
                 "callSnippet": false,
                 "enable": true,
+                "functionCompletionNeedParentheses": false,
                 "postfix": "@"
             }
         },
@@ -39,6 +40,7 @@
             "default": {
                 "diagnosticInterval": 500,
                 "disable": [],
+                "disableCheckParamType": [],
                 "enable": true,
                 "enables": [],
                 "globals": [],
@@ -110,6 +112,7 @@
         "runtime": {
             "$ref": "#/$defs/EmmyrcRuntime",
             "default": {
+                "constructor": [],
                 "extensions": [],
                 "frameworkVersions": [],
                 "nonstandardSymbol": [],
@@ -164,6 +167,7 @@
                 {
                     "type": "string",
                     "enum": [
+                        "unknown-function-param",
                         "none"
                     ]
                 },
@@ -554,6 +558,11 @@
                     "default": true,
                     "x-vscode-setting": true
                 },
+                "functionCompletionNeedParentheses": {
+                    "description": "function completion need \"()\"",
+                    "type": "boolean",
+                    "default": false
+                },
                 "postfix": {
                     "description": "后缀补全触发关键词。",
                     "type": "string",
@@ -600,6 +609,13 @@
                     "default": [],
                     "items": {
                         "$ref": "#/$defs/DiagnosticCode"
+                    }
+                },
+                "disableCheckParamType": {
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
                     }
                 },
                 "enable": {
@@ -968,6 +984,13 @@
         "EmmyrcRuntime": {
             "type": "object",
             "properties": {
+                "constructor": {
+                    "description": "constructor function",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "extensions": {
                     "description": "文件扩展名。例如：.lua, .lua.txt",
                     "type": "array",
@@ -1021,7 +1044,10 @@
                     "$ref": "#/$defs/EmmyrcLuaVersion",
                     "default": "LuaLatest"
                 }
-            }
+            },
+            "required": [
+                "constructor"
+            ]
         },
         "EmmyrcSemanticToken": {
             "type": "object",

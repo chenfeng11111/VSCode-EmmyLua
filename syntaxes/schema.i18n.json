@@ -269,6 +269,9 @@
         "en": "Enable autocompletion.",
         "zh-CN": "是否启用代码补全。"
     },
+    "EmmyrcCompletion.functionCompletionNeedParentheses": {
+        "en": "function completion need \"()\""
+    },
     "EmmyrcCompletion.postfix": {
         "en": "Symbol that's used to trigger postfix autocompletion.",
         "zh-CN": "后缀补全触发关键词。"
@@ -435,6 +438,9 @@
     },
     "EmmyrcReformat.useDiff": {
         "en": "Whether to use the diff algorithm for formatting."
+    },
+    "EmmyrcRuntime.constructor": {
+        "en": "constructor function"
     },
     "EmmyrcRuntime.extensions": {
         "en": "file Extensions. eg: .lua, .lua.txt",
